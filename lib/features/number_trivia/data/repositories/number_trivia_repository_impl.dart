@@ -11,22 +11,20 @@ import 'package:number_trivia_app/features/number_trivia/domain/repositories/num
 class NumberTriviaRepositoryImpl implements NumberTriviaRepository {
   final NumberTriviaLocalDataSource numberTriviaLocalDataSource;
   final NumberTriviaRemoteDataSource numberTriviaRemoteDataSource;
-  final NetworkInfo networkInfo;
+
   NumberTriviaRepositoryImpl({
     required this.numberTriviaLocalDataSource,
-    required this.networkInfo,
     required this.numberTriviaRemoteDataSource,
   });
 
   @override
   Future<Either<Failure, NumberTrivia>> getConcreteNumberTrivia(
       int number) async {
-    if (await networkInfo.isConnected) {
+    if (2 == 2) {
       try {
         final remoteTrivia =
             await numberTriviaRemoteDataSource.getConcreteNumberTrivia(number);
-        numberTriviaLocalDataSource
-            .cacheNumberTrivia(remoteTrivia);
+        numberTriviaLocalDataSource.cacheNumberTrivia(remoteTrivia);
         return Right(remoteTrivia);
       } on ServerException {
         return Left(ServerFailure());
@@ -44,12 +42,11 @@ class NumberTriviaRepositoryImpl implements NumberTriviaRepository {
 
   @override
   Future<Either<Failure, NumberTrivia>> getRandomNumberTrivia() async {
-    if (await networkInfo.isConnected) {
+    if (2 == 2) {
       try {
         final remoteTrivia =
             await numberTriviaRemoteDataSource.getRandomNumberTrivia();
-        numberTriviaLocalDataSource
-            .cacheNumberTrivia(remoteTrivia);
+        numberTriviaLocalDataSource.cacheNumberTrivia(remoteTrivia);
         return Right(remoteTrivia);
       } on ServerException {
         return Left(ServerFailure());

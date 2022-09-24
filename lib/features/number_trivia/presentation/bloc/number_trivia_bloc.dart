@@ -24,18 +24,23 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
       required this.getRandomNumberTrivia,
       required this.inputConverter})
       : super(Empty()) {
-    on<GetTriviaForConcreteNumber>((event, emit) {
+    on<GetTriviaForConcreteNumber>((event, emit) async {
       final inputEither =
-          inputConverter.stringToUnsignedInteger(event.numberString);
+          await inputConverter.stringToUnsignedInteger(event.numberString);
       inputEither.fold(
           (failure) => (emit(Error(message: INVALID_INPUT_FAILURE_MESSAGE))),
           (integer) async {
         emit(Loading());
-        final failureOrTrivia =
-            await getConcreteNumberTrivia(Params(number: integer));
-        failureOrTrivia.fold(
-            (failure) => (emit(Error(message: SERVER_FAILURE_MESSAGE))),
-            (loaded) => emit(Loaded(trivia: loaded)));
+        await getConcreteNumberTrivia(Params(number: integer)).then((value) {
+          print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+          value.fold((failure) {
+            print('Inside failure......');
+            return emit(Error(message: SERVER_FAILURE_MESSAGE));
+          }, (loaded) {
+            print('Inside Loaded.....');
+            return emit(Loaded(trivia: loaded));
+          });
+        });
       });
     });
   }

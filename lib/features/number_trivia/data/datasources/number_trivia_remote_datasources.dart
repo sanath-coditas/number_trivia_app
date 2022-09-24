@@ -14,7 +14,7 @@ class NumberTriviaRemoteDataSourceImpl implements NumberTriviaRemoteDataSource {
   @override
   Future<NumberTriviaModel> getConcreteNumberTrivia(int number) async {
     final response = await client.get(
-      'http://numbersapi.com/$number',
+      Uri.parse('http://numbersapi.com/$number'),
       headers: {'Content-Type': 'application/json'},
     );
     if (response.statusCode == 200) {
@@ -27,7 +27,7 @@ class NumberTriviaRemoteDataSourceImpl implements NumberTriviaRemoteDataSource {
   @override
   Future<NumberTriviaModel> getRandomNumberTrivia() async {
     final response = await client.get(
-      'http://numbersapi.com/random',
+      Uri.parse('http://numbersapi.com/random'),
       headers: {'Content-Type': 'application/json'},
     );
     if (response.statusCode == 200) {
