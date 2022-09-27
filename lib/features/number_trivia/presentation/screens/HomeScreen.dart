@@ -18,13 +18,12 @@ class HomeScreen extends StatelessWidget {
       body: BlocBuilder<NumberTriviaBloc, NumberTriviaState>(
         builder: (context, state) {
           if (state is Empty) {
-            BlocProvider.of<NumberTriviaBloc>(context)
-                .add(GetTriviaForConcreteNumber(numberString: '3'));
-            return Center(child: const Text('Empty....\n'));
-          } else if (state is Loading) {
-            return const Center(child: const Text('Loading......\n'));
+            return AppBody(state: state);
+          }
+          if (state is Loading) {
+            return const Center(child: Text('Loading.....'));
           } else if (state is Loaded) {
-            return AppBody();
+            return AppBody(state: state);
           } else {
             return Container();
           }

@@ -1,8 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 import 'package:number_trivia_app/core/usecases/usecase.dart';
-
 import '../../../../core/error/failure.dart';
 import '../entities/number_trivia.dart';
 import '../repositories/number_trivia_repository.dart';
@@ -25,6 +23,5 @@ class Params extends Equatable {
   Params({required this.number}) : super();
   
   @override
-  // TODO: implement props
   List<Object?> get props => throw UnimplementedError();
 }

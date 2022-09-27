@@ -1,14 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:number_trivia_app/constants.dart';
 
-class AppBody extends StatelessWidget {
-  const AppBody({
-    Key? key,
-  }) : super(key: key);
+import '../bloc/number_trivia_bloc.dart';
+import '../bloc/number_trivia_state.dart';
 
+class AppBody extends StatelessWidget {
+  AppBody({Key? key, required this.state}) : super(key: key);
+  String val = '';
+  String desc = '';
+  final NumberTriviaState state;
   @override
   Widget build(BuildContext context) {
+    if (state is Empty) {
+      val = 'Start searching....';
+    }
+    if (state is Loaded) {
+      val = (state as Loaded).trivia.number.toString();
+      desc = (state as Loaded).trivia.text;
+    }
     return Column(
       children: [
         Padding(
@@ -19,27 +30,36 @@ class AppBody extends StatelessWidget {
             child: Center(
                 child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Text(
-                  'Sample',
-                  style: kNumberTextStyle,
+              children: [
+                const SizedBox(
+                  height: 30,
                 ),
-                Text(
-                  'Sample Text',
-                  textAlign: TextAlign.center,
-                  style: kTriviaTextStyle,
+                Expanded(
+                  child: Text(
+                    val,
+                    style: kNumberTextStyle,
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    desc,
+                    textAlign: TextAlign.center,
+                    style: kTriviaTextStyle,
+                  ),
                 ),
               ],
             )),
           ),
         ),
-        const Padding(
-          padding: EdgeInsets.all(32.0),
+        Padding(
+          padding: const EdgeInsets.all(32.0),
           child: TextField(
             keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-                hintText: 'Input a number',
-                border: OutlineInputBorder()),
+            decoration: const InputDecoration(
+                hintText: 'Input a number', border: OutlineInputBorder()),
+            onChanged: (value) {
+              val = value;
+            },
           ),
         ),
         Padding(
@@ -50,6 +70,8 @@ class AppBody extends StatelessWidget {
                   child: ElevatedButton(
                       onPressed: () {
                         HapticFeedback.vibrate();
+                        BlocProvider.of<NumberTriviaBloc>(context)
+                            .add(GetTriviaForConcreteNumber(numberString: val));
                       },
                       child: const Text('Search'))),
               const SizedBox(
@@ -58,8 +80,7 @@ class AppBody extends StatelessWidget {
               Expanded(
                 child: ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(Colors.grey),
+                      backgroundColor: MaterialStateProperty.all(Colors.grey),
                     ),
                     onPressed: () {
                       HapticFeedback.vibrate();
